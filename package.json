@@ -4,13 +4,17 @@
   "description": "",
   "main": "es_test_script.js",
   "dependencies": {
+    "snowplow-tracker": "^0.2.0",
+    "lodash": "^4.13.1",
     "bluebird": "~3.5.0",
-    "elasticsearch": "~13.0.1"
+    "moment-timezone": "^0.3.0",
+    "elasticsearch": "~13.0.1",
+    "s3-streamlogger": "~1.0.0"
   },
   "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
+  "author": "Bhushan Vaiude",
   "license": "BSD-2-Clause"
 }

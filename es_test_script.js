@@ -6,6 +6,20 @@ var ES_BODY =  JSON.stringify({"_source":["_id","spotlight"],"query":{"bool":{"f
 var esData = '{"es_host":"'+ES_HOST+'", "es_index":"'+ES_INDEX+'"}';
 var elasticsearch = require('elasticsearch');
 var Bluebird = require('bluebird');
+var t0 = new Date();
+var ELKLogging = require('./logger');
+ELKLogging.log("INFO", 30, {"APP":"AWS_LAMBDA","checkpoint":"testnode"});
+
+
+var S3StreamLogger = require('s3-streamlogger').S3StreamLogger;
+
+var s3stream = new S3StreamLogger({
+             bucket: "cpmslogs",
+      access_key_id: "AKIAI7K3NAZM5XSNNRXA",
+  secret_access_key: "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"
+});
+
+s3stream.write("hello S3, Bhushan Vaiude");
 
 esData = JSON.parse(esData);
 ES_HOST = esData.es_host;
@@ -35,8 +49,11 @@ client.ping({
 client.search({
   index: ES_INDEX,
   // type: ES_TYPE,
+  cpms_start_time:new Date(),
   body: ES_BODY
 }).then(function (resp) {
+	var cpms_end_time = new Date();
+	console.log("ES network time:", (cpms_end_time - cpms_start_time)/1000, "Took Time:", resp.took )
     var hits = resp.hits.hits;
     // console.log(hits);
 
@@ -44,3 +61,5 @@ client.search({
     console.trace(err.message);
 });
 
+var t1 = new Date();
+console.log("Call to doSomething took " + (t1 - t0)/1000 + " seconds.");
