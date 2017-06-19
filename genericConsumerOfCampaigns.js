@@ -13,6 +13,7 @@ var s3stream = new S3StreamLogger({
       access_key_id: "AKIAI7K3NAZM5XSNNRXA",
   secret_access_key: "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"
 });
+var moment = require('moment-timezone');
 
 function doLogging(extraInfo)
 {
@@ -44,6 +45,7 @@ var t0 = new Date();
     });
 
     var batchId = "";
+    var memberlogin = "";
     var counter = 0;
     event.Records.forEach(function(record) {
         // Kinesis data is base64 encoded so decode here
@@ -56,6 +58,7 @@ var t0 = new Date();
           ES_INDEX = esData.es_index;
           ES_BODY = esData.es_body;
           batchId = payloadObject.batchId;
+          memberlogin = payloadObject.memberlogin;
         }
         else
         {
@@ -89,7 +92,7 @@ var t0 = new Date();
 //Event checkout:"batch-processing" ended log
     var processEndTime = moment.tz('Asia/Kolkata').format("YYYY-MM-DD HH:mm:ss"); 
     var t1 = new Date();
-    doLogging({"batchId":batchId, "count":Object.keys(event.Records).length, "checkpoint":"batch-processing", "start-time":processStartTime, "end-time":processEndTime, "total-exe-time":(t1-t0)/1000})
+    doLogging({"batchId":batchId, "events_count":Object.keys(event.Records).length, "checkpoint":"batch-processing", "start-time":processStartTime, "end-time":processEndTime, "total-exe-time":(t1-t0)/1000})
 
     callback(null, "All is well. Bhushan!");
 };
