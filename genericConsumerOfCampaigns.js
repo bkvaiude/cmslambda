@@ -36,13 +36,13 @@ var t0 = new Date();
 
 
 
-    var client = new elasticsearch.Client({
-      host: ES_HOST,
-      // log: 'trace',
-      defer: function () {
-        return Bluebird.defer();
-      }
-    });
+    // var client = new elasticsearch.Client({
+    //   host: ES_HOST,
+    //   // log: 'trace',
+    //   defer: function () {
+    //     return Bluebird.defer();
+    //   }
+    // });
 
     var batchId = "";
     var memberlogin = "";
@@ -67,21 +67,27 @@ var t0 = new Date();
 
         try
         {        
-          //log checkpoint:member-info
           doLogging({"batchId":batchId, "memberlogin":memberlogin, "checkpoint":"member-info"});
+          sleep(100, function(){//ES profile search
+            doLogging({"batchId":batchId, "memberlogin":memberlogin, "checkpoint":"es-sucess-response", "es_total":100, "es_took":100});
+            sleep(150, function(){//payload preparation and SES
+              doLogging({"batchId":batchId, "memberlogin":memberlogin, "checkpoint":"SES-sucess-response", "response":true});
+            });
 
-          client.search({
-            index: ES_INDEX,
-            body: ES_BODY
-          }).then(function (resp) {
-            doLogging({"batchId":batchId, "memberlogin":memberlogin, "checkpoint":"es-sucess-response", "es_total":resp.hits.total, "es_took":resp.took});
-          //log checkpoint:es-sucess-response
-
-          }, function (err) {
-          //log checkpoint:es-error-response
-            doLogging({"batchId":batchId, "memberlogin":memberlogin, "checkpoint":"es-error-response", "es_error":err});
-            console.log("ES Search end with fail ","Error:",err);
           });
+          
+          // client.search({
+          //   index: ES_INDEX,
+          //   body: ES_BODY
+          // }).then(function (resp) {
+          //   doLogging({"batchId":batchId, "memberlogin":memberlogin, "checkpoint":"es-sucess-response", "es_total":resp.hits.total, "es_took":resp.took});
+          // //log checkpoint:es-sucess-response
+
+          // }, function (err) {
+          // //log checkpoint:es-error-response
+          //   doLogging({"batchId":batchId, "memberlogin":memberlogin, "checkpoint":"es-error-response", "es_error":err});
+          //   console.log("ES Search end with fail ","Error:",err);
+          // });
         }
         catch(err)
         {
