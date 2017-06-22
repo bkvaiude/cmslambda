@@ -10,8 +10,8 @@ var _ = require('lodash');
 var S3StreamLogger = require('s3-streamlogger').S3StreamLogger;
 var s3stream = new S3StreamLogger({
              bucket: "cpmslogs",
-      access_key_id: "AKIAI7K3NAZM5XSNNRXA",
-  secret_access_key: "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"
+      access_key_id: "XXX",
+  secret_access_key: "XXX"
 });
 var moment = require('moment-timezone');
 
@@ -75,7 +75,7 @@ var t0 = new Date();
             });
 
           });
-          
+
           // client.search({
           //   index: ES_INDEX,
           //   body: ES_BODY
